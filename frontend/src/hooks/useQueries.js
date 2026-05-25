@@ -83,6 +83,16 @@ export function useDrives() {
   return useQuery({ queryKey: QK.drives(), queryFn: api.getDrives, staleTime: 30_000 });
 }
 
+export function useCreateDrive() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: api.createDrive,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: QK.drives() });
+    },
+  });
+}
+
 export function useApplications() {
   const { user } = useAuthStore();
   const params = user?.role === "student" ? { student_id: user.student_id } : {};
