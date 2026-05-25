@@ -82,6 +82,12 @@ export const getDrives = () => api.get("/drives").then((r) => r.data);
 export const createDrive = (body) => api.post("/drives", body).then((r) => r.data);
 
 // ─────────────────────────────────────────────────────────────────────────────
+// ROUNDS
+// ─────────────────────────────────────────────────────────────────────────────
+export const getRounds = () => api.get("/rounds").then((r) => r.data);
+export const createRound = (body) => api.post("/rounds", body).then((r) => r.data);
+
+// ─────────────────────────────────────────────────────────────────────────────
 // APPLICATIONS
 // ─────────────────────────────────────────────────────────────────────────────
 export const getApplications = (params = {}) => api.get("/applications", { params }).then((r) => r.data);

@@ -7,7 +7,7 @@ import {
   LayoutDashboard, User, Building2, Calendar, ClipboardList,
   Target, SlidersHorizontal, BarChart3, Star, Sparkles,
   Users, CheckCircle2, Gift, Award, Menu, X, FileText,
-  ChevronsLeft, ChevronsRight, Sun, Moon, LogOut, Bell, MessageSquare, Mic,
+  ChevronsLeft, ChevronsRight, Sun, Moon, LogOut, Bell, MessageSquare, Mic, Layers,
 } from "lucide-react";
 import useAuthStore from "@/store/authStore";
 import { T, getTheme } from "@/tokens";
@@ -23,6 +23,7 @@ const NAV = {
         { icon: User,            label: "My Profile",   path: "/student/profile"   },
         { icon: Building2,       label: "Companies",    path: "/student/companies" },
         { icon: Calendar,        label: "Drives",       path: "/student/drives"    },
+        { icon: Layers,          label: "Recruitment Rounds", path: "/student/rounds" },
         { icon: ClipboardList,   label: "Applications", path: "/student/apps"      },
         { icon: Gift,            label: "My Offers",    path: "/student/offers"    },
         { icon: MessageSquare,   label: "Direct Messages", path: "/messages"       },
@@ -50,6 +51,7 @@ const NAV = {
         { icon: Users,           label: "Students",        path: "/tpo/students"     },
         { icon: Building2,       label: "Companies",       path: "/tpo/companies"    },
         { icon: Calendar,        label: "Drives",          path: "/tpo/drives"       },
+        { icon: Layers,          label: "Recruitment Rounds", path: "/tpo/rounds"    },
         { icon: ClipboardList,   label: "Applications",    path: "/tpo/applications" },
         { icon: CheckCircle2,    label: "Results",         path: "/tpo/results"      },
         { icon: Gift,            label: "Offers",          path: "/tpo/offers"       },
@@ -67,6 +69,7 @@ const NAV = {
         { icon: LayoutDashboard, label: "Dashboard",       path: "/hr/dashboard"    },
         { icon: Building2,       label: "Companies",       path: "/hr/companies"    },
         { icon: Calendar,        label: "Drives",          path: "/hr/drives"       },
+        { icon: Layers,          label: "Recruitment Rounds", path: "/hr/rounds"    },
         { icon: ClipboardList,   label: "Applications",    path: "/hr/applications" },
         { icon: Award,           label: "Placed Students", path: "/hr/placed"       },
         { icon: MessageSquare,   label: "Direct Messages", path: "/hr/messages"     },

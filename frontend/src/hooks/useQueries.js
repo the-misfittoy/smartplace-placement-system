@@ -14,6 +14,7 @@ export const QK = {
   companies:         ()         => ["companies"],
   company:           (id)       => ["companies", id],
   drives:            ()         => ["drives"],
+  rounds:            ()         => ["rounds"],
   applications:      (params)   => ["applications", params],
   results:           ()         => ["results"],
   offers:            ()         => ["offers"],
@@ -89,6 +90,20 @@ export function useCreateDrive() {
     mutationFn: api.createDrive,
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: QK.drives() });
+    },
+  });
+}
+
+export function useRounds() {
+  return useQuery({ queryKey: QK.rounds(), queryFn: api.getRounds, staleTime: 30_000 });
+}
+
+export function useCreateRound() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: api.createRound,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: QK.rounds() });
     },
   });
 }

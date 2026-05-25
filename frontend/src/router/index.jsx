@@ -29,6 +29,7 @@ const Drives            = lazy(() => import("@/pages/Shared/Drives"));
 const Applications      = lazy(() => import("@/pages/Shared/Applications"));
 const PlacedStudents    = lazy(() => import("@/pages/Shared/PlacedStudents"));
 const Messages          = lazy(() => import("@/pages/Shared/Messages"));
+const Rounds            = lazy(() => import("@/pages/Shared/Rounds"));
 
 // TPO
 const TPODashboard      = lazy(() => import("@/pages/tpo/Dashboard"));
@@ -78,6 +79,7 @@ const router = createBrowserRouter([
         { path:"profile",    element:<S C={Profile} /> },
         { path:"companies",  element:<S C={Companies}    role="student" /> },
         { path:"drives",     element:<S C={Drives}       role="student" /> },
+        { path:"rounds",     element:<S C={Rounds}       role="student" /> },
         { path:"apps",       element:<S C={Applications} role="student" /> },
         { path:"strategy",   element:<S C={Strategy} /> },
         { path:"simulator",  element:<S C={Simulator} /> },
@@ -116,6 +118,7 @@ const router = createBrowserRouter([
         { path:"tpo/students",     element:<S C={Students} /> },
         { path:"tpo/companies",    element:<S C={Companies}    role="tpo" /> },
         { path:"tpo/drives",       element:<S C={Drives}       role="tpo" /> },
+        { path:"tpo/rounds",       element:<S C={Rounds}       role="tpo" /> },
         { path:"tpo/applications", element:<S C={Applications} role="tpo" /> },
         { path:"tpo/results",      element:<S C={Results} /> },
         { path:"tpo/offers",       element:<S C={Offers} /> },
@@ -133,6 +136,7 @@ const router = createBrowserRouter([
         { path:"hr/dashboard",    element:<S C={HRDashboard} /> },
         { path:"hr/companies",    element:<S C={Companies}    role="hr" /> },
         { path:"hr/drives",       element:<S C={Drives}       role="hr" /> },
+        { path:"hr/rounds",       element:<S C={Rounds}       role="hr" /> },
         { path:"hr/applications", element:<S C={Applications} role="hr" /> },
         { path:"hr/placed",       element:<S C={PlacedStudents} /> },
       ],
