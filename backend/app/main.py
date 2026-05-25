@@ -2404,10 +2404,11 @@ def get_placement_strategy(student_id: int, user: dict = Depends(get_current_use
     if not companies:
         return {"student_name": student["name"], "message": "No eligible companies found", "strategy": []}
 
-    student_cgpa = float(student["cgpa"])
+    student_cgpa = float(student["cgpa"]) if student["cgpa"] is not None else 0.0
     strategy = []
     for c in companies:
-        cgpa_diff = student_cgpa - float(c["min_cgpa"])
+        min_cg = float(c["min_cgpa"]) if c["min_cgpa"] is not None else 0.0
+        cgpa_diff = student_cgpa - min_cg
         # Normalised match score: 0–100 based on CGPA margin (capped at 2.0 diff = 100)
         match_score = min(100, 60 + (cgpa_diff / 2.0) * 40)
 
@@ -2640,7 +2641,7 @@ def analyze_resume(body: ResumeFeedbackRequest, user: dict = Depends(get_current
             contents=[system_prompt, f"Resume Text:\n{body.resume_text}"]
         )
         
-        raw_text = response.text.strip()
+        raw_text = (response.text or "").strip()
         if raw_text.startswith("```json"):
             raw_text = raw_text[7:-3].strip()
         elif raw_text.startswith("```"):
@@ -2920,10 +2921,11 @@ class MockSubmitRequest(BaseModel):
 @app.get("/tpo/placement-risk", dependencies=[Depends(require_role("tpo"))])
 def get_tpo_placement_risk():
     with get_db() as (conn, cursor):
-        # 1. Fetch all students
+        # 1. Fetch all students with their email by joining users table
         cursor.execute("""
-            SELECT student_id, name, branch, cgpa, active_backlogs, placement_status, email 
-            FROM student
+            SELECT s.student_id, s.name, s.branch, s.cgpa, s.active_backlogs, s.placement_status, u.email 
+            FROM student s
+            LEFT JOIN users u ON s.student_id = u.student_id
         """)
         students = cursor.fetchall()
         
@@ -2941,11 +2943,13 @@ def get_tpo_placement_risk():
             rejections = cursor.fetchone()["rejections"]
             student["rejections_count"] = rejections
             
+            student_cgpa = float(student["cgpa"]) if student["cgpa"] is not None else 0.0
+            
             # Risk Scoring Heuristics
-            if student["active_backlogs"] > 0 or rejections >= 2 or float(student["cgpa"]) < 7.0:
+            if student["active_backlogs"] > 0 or rejections >= 2 or student_cgpa < 7.0:
                 student["risk_score"] = "High"
                 high_risk_count += 1
-            elif rejections == 1 or (float(student["cgpa"]) >= 7.0 and float(student["cgpa"]) < 8.0):
+            elif rejections == 1 or (student_cgpa >= 7.0 and student_cgpa < 8.0):
                 student["risk_score"] = "Medium"
                 med_risk_count += 1
             else:
@@ -2967,8 +2971,10 @@ def get_tpo_placement_risk():
 def generate_student_coaching_strategy(student_id: int):
     with get_db() as (conn, cursor):
         cursor.execute("""
-            SELECT student_id, name, branch, cgpa, active_backlogs, placement_status, email 
-            FROM student WHERE student_id = %s
+            SELECT s.student_id, s.name, s.branch, s.cgpa, s.active_backlogs, s.placement_status, u.email 
+            FROM student s
+            LEFT JOIN users u ON s.student_id = u.student_id
+            WHERE s.student_id = %s
         """, (student_id,))
         student = cursor.fetchone()
         
@@ -3043,7 +3049,8 @@ def hr_semantic_search(request: SemanticSearchRequest):
             model="gemini-2.5-flash-lite",
             contents=[system_instruction, f"Query: \"{request.query}\""]
         )
-        clean_text = response.text.replace("```json", "").replace("```", "").strip()
+        raw_text = response.text or ""
+        clean_text = raw_text.replace("```json", "").replace("```", "").strip()
         filters = json.loads(clean_text)
     except Exception as e:
         logger.error(f"Failed to parse semantic search: {e}")
@@ -3065,20 +3072,25 @@ def hr_semantic_search(request: SemanticSearchRequest):
                 filters["min_cgpa"] = float(match.group(1))
 
     # Safely build SQL query utilizing parameterized bindings to eliminate SQL injection
-    query_str = "SELECT student_id, name, branch, cgpa, active_backlogs, placement_status, email FROM student WHERE 1=1"
+    query_str = """
+        SELECT s.student_id, s.name, s.branch, s.cgpa, s.active_backlogs, s.placement_status, u.email 
+        FROM student s
+        LEFT JOIN users u ON s.student_id = u.student_id
+        WHERE 1=1
+    """
     params = []
     
     if filters.get("min_cgpa") is not None:
-        query_str += " AND cgpa >= %s"
+        query_str += " AND s.cgpa >= %s"
         params.append(filters["min_cgpa"])
     if filters.get("branch") is not None:
-        query_str += " AND branch = %s"
+        query_str += " AND s.branch = %s"
         params.append(filters["branch"])
     if filters.get("max_backlogs") is not None:
-        query_str += " AND active_backlogs <= %s"
+        query_str += " AND s.active_backlogs <= %s"
         params.append(filters["max_backlogs"])
     if filters.get("placement_status") is not None:
-        query_str += " AND placement_status = %s"
+        query_str += " AND s.placement_status = %s"
         params.append(filters["placement_status"])
         
     with get_db() as (conn, cursor):
@@ -3143,7 +3155,8 @@ def get_mock_interview_next(request: MockSubmitRequest, current_user: dict = Dep
                 model="gemini-2.5-flash-lite",
                 contents=[evaluation_instruction, f"Transcript:\n{transcript_content}"]
             )
-            clean_text = response.text.replace("```json", "").replace("```", "").strip()
+            raw_text = response.text or ""
+            clean_text = raw_text.replace("```json", "").replace("```", "").strip()
             eval_report = json.loads(clean_text)
         except Exception as e:
             logger.error(f"Failed to generate mock evaluation: {e}")
