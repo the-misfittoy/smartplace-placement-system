@@ -34,6 +34,7 @@ const Rounds            = lazy(() => import("@/pages/Shared/Rounds"));
 // TPO
 const TPODashboard      = lazy(() => import("@/pages/tpo/Dashboard"));
 const Students          = lazy(() => import("@/pages/tpo/Students"));
+const StudentDetail     = lazy(() => import("@/pages/tpo/StudentDetail"));
 const Results           = lazy(() => import("@/pages/tpo/Results"));
 const Offers            = lazy(() => import("@/pages/tpo/Offers"));
 
@@ -116,6 +117,7 @@ const router = createBrowserRouter([
       children:[
         { path:"tpo/dashboard",    element:<S C={TPODashboard} /> },
         { path:"tpo/students",     element:<S C={Students} /> },
+        { path:"tpo/students/:id", element:<S C={StudentDetail} /> },
         { path:"tpo/companies",    element:<S C={Companies}    role="tpo" /> },
         { path:"tpo/drives",       element:<S C={Drives}       role="tpo" /> },
         { path:"tpo/rounds",       element:<S C={Rounds}       role="tpo" /> },

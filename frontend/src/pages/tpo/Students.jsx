@@ -2,6 +2,7 @@
  * src/pages/tpo/Students.jsx
  */
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Trash2, Sparkles, X, Activity } from "lucide-react";
 import DataTable from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/StatusBadge";
@@ -10,6 +11,7 @@ import { useTpoRisk, useDeleteStudent, useGenerateCoachingStrategy } from "@/hoo
 
 export default function Students({ dark = true }) {
   const th = getTheme(dark);
+  const navigate = useNavigate();
   
   const { data: riskData, isLoading, isError, refetch } = useTpoRisk();
   const students = useMemo(() => riskData?.students || [], [riskData]);
@@ -31,8 +33,13 @@ export default function Students({ dark = true }) {
     {
       key: "name", label: "Student Details", sortable: true,
       render: (v, r) => (
-        <div>
-          <div style={{ fontWeight: 500, color: th.textPrimary }}>{v || "Unknown"}</div>
+        <div 
+          onClick={() => navigate(`/tpo/students/${r.student_id}`)}
+          style={{ cursor: "pointer" }}
+          onMouseEnter={e => e.currentTarget.style.textDecoration = "underline"}
+          onMouseLeave={e => e.currentTarget.style.textDecoration = "none"}
+        >
+          <div style={{ fontWeight: 500, color: T.amber }}>{v || "Unknown"}</div>
           <div style={{ fontSize: 11.5, color: th.textMuted }}>{r.email}</div>
         </div>
       ),
