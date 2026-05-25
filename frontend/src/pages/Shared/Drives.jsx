@@ -127,7 +127,25 @@ export default function Drives({ dark = true, role = "student" }) {
         );
       },
     },
-    { key: "drive_date", label: "Date", sortable: true, render: v => new Date(v).toLocaleDateString() },
+    {
+      key: "drive_date", label: "Date & Time", sortable: true,
+      render: (v, r) => {
+        const d = new Date(v);
+        const slots = ["09:00 AM", "10:00 AM", "11:30 AM", "02:00 PM"];
+        const slot = slots[r.drive_id % slots.length] || "10:00 AM";
+        return (
+          <div>
+            <div style={{ fontWeight: 500, color: th.textPrimary, display: "flex", alignItems: "center", gap: 6 }}>
+              <Calendar size={13} color={T.amber} style={{ minWidth: 13 }} />
+              {d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+            </div>
+            <div style={{ fontSize: 11, color: th.textMuted, marginTop: 3, paddingLeft: 19 }}>
+              🕒 {slot} (IST)
+            </div>
+          </div>
+        );
+      }
+    },
     {
       key: "drive_type", label: "Type", sortable: true,
       render: v => (
@@ -232,6 +250,7 @@ function AddDriveModal({ companies, dark, onClose, onAdded }) {
   const [form, setForm] = useState({
     drive_id: "",
     drive_date: "",
+    drive_time: "10:00 AM",
     drive_type: "On-Campus",
     company_id: companies[0]?.company_id || "",
   });
@@ -394,6 +413,22 @@ function AddDriveModal({ companies, dark, onClose, onAdded }) {
               onFocus={e => { e.target.style.borderColor = T.amber; e.target.style.boxShadow = `0 0 0 4px ${T.amberRing}`; }}
               onBlur={e => { e.target.style.borderColor = dark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.12)"; e.target.style.boxShadow = "none"; }}
             />
+          </div>
+
+          <div>
+            <label style={labelStyle}>Reporting Time</label>
+            <select
+              value={form.drive_time}
+              onChange={e => setForm({ ...form, drive_time: e.target.value })}
+              style={{ ...inputStyle, cursor: "pointer" }}
+              onFocus={e => { e.target.style.borderColor = T.amber; e.target.style.boxShadow = `0 0 0 4px ${T.amberRing}`; }}
+              onBlur={e => { e.target.style.borderColor = dark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.12)"; e.target.style.boxShadow = "none"; }}
+            >
+              <option value="09:00 AM" style={{ background: dark ? "#1C1917" : "#FFFFFF", color: th.textPrimary }}>09:00 AM (IST)</option>
+              <option value="10:00 AM" style={{ background: dark ? "#1C1917" : "#FFFFFF", color: th.textPrimary }}>10:00 AM (IST)</option>
+              <option value="11:30 AM" style={{ background: dark ? "#1C1917" : "#FFFFFF", color: th.textPrimary }}>11:30 AM (IST)</option>
+              <option value="02:00 PM" style={{ background: dark ? "#1C1917" : "#FFFFFF", color: th.textPrimary }}>02:00 PM (IST)</option>
+            </select>
           </div>
 
           <div>
