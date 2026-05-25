@@ -15,9 +15,27 @@ export default defineConfig({
     port: 5173,
     proxy: {
       "/logout":               { target: "http://127.0.0.1:8002", changeOrigin: true },
-      "/login":                { target: "http://127.0.0.1:8002", changeOrigin: true },
-      "/forgot-password":      { target: "http://127.0.0.1:8002", changeOrigin: true },
-      "/reset-password":       { target: "http://127.0.0.1:8002", changeOrigin: true },
+      "/login": {
+        target: "http://127.0.0.1:8002",
+        changeOrigin: true,
+        bypass: (req) => {
+          if (req.headers.accept?.includes("text/html")) return "/index.html";
+        }
+      },
+      "/forgot-password": {
+        target: "http://127.0.0.1:8002",
+        changeOrigin: true,
+        bypass: (req) => {
+          if (req.headers.accept?.includes("text/html")) return "/index.html";
+        }
+      },
+      "/reset-password": {
+        target: "http://127.0.0.1:8002",
+        changeOrigin: true,
+        bypass: (req) => {
+          if (req.headers.accept?.includes("text/html")) return "/index.html";
+        }
+      },
       "/upload-resume":        { target: "http://127.0.0.1:8002", changeOrigin: true },
       "/resumes":              { target: "http://127.0.0.1:8002", changeOrigin: true },
       "/students":             { target: "http://127.0.0.1:8002", changeOrigin: true },
