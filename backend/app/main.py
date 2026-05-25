@@ -2281,7 +2281,7 @@ def get_company_dashboard(user: dict = Depends(get_current_user)):
     with get_db() as (db, cursor):
         # 2. Safely filter the database
         cursor.execute("""
-            SELECT s.name, s.branch, s.cgpa, s.active_backlogs,
+            SELECT s.name, s.branch, s.cgpa, s.active_backlogs, s.placement_status,
                    a.application_status, a.eligibility_status
             FROM application a
             JOIN student s ON a.student_id = s.student_id

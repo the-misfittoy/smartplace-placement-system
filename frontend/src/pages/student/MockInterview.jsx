@@ -20,6 +20,7 @@ export default function MockInterview() {
   const [customCompany, setCustomCompany] = useState("");
   const [customRole, setCustomRole] = useState("");
 
+  const [voicesList, setVoicesList] = useState([]);
   const [history, setHistory] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState("");
   const [answerInput, setAnswerInput] = useState("");
@@ -38,6 +39,16 @@ export default function MockInterview() {
 
   const targetCompany = company === "Custom" ? customCompany : company;
   const targetRole = role === "Custom" ? customRole : role;
+
+  // Load voices asynchronously
+  useEffect(() => {
+    if (!("speechSynthesis" in window)) return;
+    const loadVoices = () => {
+      setVoicesList(window.speechSynthesis.getVoices() || []);
+    };
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+  }, []);
 
   // Cleanup synthesis and speech recognition on unmount
   useEffect(() => {
@@ -60,15 +71,14 @@ export default function MockInterview() {
     utterance.rate = 0.98;
     utterance.pitch = 1.05;
 
-    const voices = window.speechSynthesis.getVoices();
-    if (voices && voices.length > 0) {
+    if (voicesList && voicesList.length > 0) {
       const premiumVoice = 
-        voices.find(v => (v.lang === "en-IN" || v.lang === "en_IN") && v.name.includes("Google")) ||
-        voices.find(v => (v.lang === "en-IN" || v.lang === "en_IN") && v.name.includes("Natural")) ||
-        voices.find(v => (v.lang === "en-IN" || v.lang === "en_IN") && v.name.includes("Online")) ||
-        voices.find(v => (v.lang === "en-IN" || v.lang === "en_IN")) ||
-        voices.find(v => (v.lang === "en-US" || v.lang === "en_US") && v.name.includes("Google")) ||
-        voices.find(v => v.lang.startsWith("en"));
+        voicesList.find(v => (v.lang === "en-IN" || v.lang === "en_IN") && v.name.includes("Google")) ||
+        voicesList.find(v => (v.lang === "en-IN" || v.lang === "en_IN") && v.name.includes("Natural")) ||
+        voicesList.find(v => (v.lang === "en-IN" || v.lang === "en_IN") && v.name.includes("Online")) ||
+        voicesList.find(v => (v.lang === "en-IN" || v.lang === "en_IN")) ||
+        voicesList.find(v => (v.lang === "en-US" || v.lang === "en_US") && v.name.includes("Google")) ||
+        voicesList.find(v => v.lang.startsWith("en"));
         
       if (premiumVoice) {
         utterance.voice = premiumVoice;
