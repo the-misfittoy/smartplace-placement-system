@@ -36,6 +36,34 @@ export default defineConfig({
           if (req.headers.accept?.includes("text/html")) return "/index.html";
         }
       },
+      "/tpo": {
+        target: "http://127.0.0.1:8002",
+        changeOrigin: true,
+        bypass: (req) => {
+          if (req.headers.accept?.includes("text/html")) return "/index.html";
+        }
+      },
+      "/hr": {
+        target: "http://127.0.0.1:8002",
+        changeOrigin: true,
+        bypass: (req) => {
+          if (req.headers.accept?.includes("text/html")) return "/index.html";
+        }
+      },
+      "/rounds": {
+        target: "http://127.0.0.1:8002",
+        changeOrigin: true,
+        bypass: (req) => {
+          if (req.headers.accept?.includes("text/html")) return "/index.html";
+        }
+      },
+      "/mock-interview": {
+        target: "http://127.0.0.1:8002",
+        changeOrigin: true,
+        bypass: (req) => {
+          if (req.headers.accept?.includes("text/html")) return "/index.html";
+        }
+      },
       "/upload-resume":        { target: "http://127.0.0.1:8002", changeOrigin: true },
       "/resumes":              { target: "http://127.0.0.1:8002", changeOrigin: true },
       "/students":             { target: "http://127.0.0.1:8002", changeOrigin: true },
