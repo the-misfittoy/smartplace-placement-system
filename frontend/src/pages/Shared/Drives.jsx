@@ -263,62 +263,81 @@ function AddDriveModal({ companies, dark, onClose, onAdded }) {
   };
 
   const labelStyle = {
-    display: "block", fontSize: 13, fontWeight: 600, color: th.textSecondary, marginBottom: 8
+    display: "block", fontSize: 13, fontWeight: 600, color: th.textSecondary, marginBottom: 8,
+    letterSpacing: "0.02em"
   };
 
   const inputStyle = {
-    width: "100%", padding: "11px 14px",
-    background: th.inputBg, border: `1.5px solid ${th.borderUp}`,
-    borderRadius: 10, fontSize: 14.5, color: th.textPrimary,
-    outline: "none", transition: "all 0.18s ease",
+    width: "100%", padding: "12px 15px",
+    background: dark ? "rgba(255, 255, 255, 0.02)" : "rgba(0, 0, 0, 0.02)",
+    border: dark ? "1px solid rgba(255, 255, 255, 0.08)" : "1px solid rgba(0, 0, 0, 0.12)",
+    borderRadius: 12, fontSize: 14.5, color: th.textPrimary,
+    outline: "none", transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
     fontFamily: T.font, boxSizing: "border-box"
   };
 
   return (
     <div style={{
       position: "fixed", inset: 0,
-      background: "rgba(0, 0, 0, 0.45)",
-      backdropFilter: "blur(14px)",
-      WebkitBackdropFilter: "blur(14px)",
+      background: "rgba(0, 0, 0, 0.55)",
+      backdropFilter: "blur(18px)",
+      WebkitBackdropFilter: "blur(18px)",
       display: "flex", alignItems: "center", justifyContent: "center",
       zIndex: 10000,
       fontFamily: T.font
     }}>
-      <div className="fade-in" style={{
+      <style>{`
+        @keyframes modalEntrance {
+          from { opacity: 0; transform: scale(0.96) translateY(10px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-card {
+          animation: modalEntrance 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+      `}</style>
+      <div className="modal-card" style={{
         width: "100%", maxWidth: 410,
-        background: dark ? "rgba(45, 41, 38, 0.75)" : "rgba(255, 255, 255, 0.75)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
-        border: dark ? "1px solid rgba(255, 255, 255, 0.08)" : "1px solid rgba(0, 0, 0, 0.08)",
-        borderRadius: 16,
-        padding: 28,
+        background: dark 
+          ? "linear-gradient(135deg, rgba(20, 18, 17, 0.85) 0%, rgba(32, 28, 26, 0.78) 100%)" 
+          : "linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(245, 243, 240, 0.82) 100%)",
+        backdropFilter: "blur(24px)",
+        WebkitBackdropFilter: "blur(24px)",
+        border: dark ? "1px solid rgba(245, 158, 11, 0.25)" : "1px solid rgba(245, 158, 11, 0.35)",
+        borderRadius: 20,
+        padding: "32px 28px",
         boxShadow: dark 
-          ? "0 24px 80px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.06)" 
-          : "0 24px 80px rgba(28, 25, 23, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
+          ? "0 35px 100px rgba(0, 0, 0, 0.85), 0 0 50px rgba(245, 158, 11, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.08)" 
+          : "0 35px 100px rgba(28, 25, 23, 0.12), 0 0 50px rgba(245, 158, 11, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
         position: "relative"
       }}>
         
         {/* Header */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 34, height: 34, borderRadius: 8, background: T.amberDim, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 26 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div style={{
+              width: 36, height: 36, borderRadius: 10,
+              background: T.amberDim,
+              border: `1px solid ${T.amberBorder}`,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              boxShadow: `0 0 12px ${T.amberDim}`
+            }}>
               <Calendar size={18} color={T.amber} />
             </div>
-            <h3 style={{ fontFamily: T.fontSerif, fontSize: 20, color: th.textPrimary, margin: 0 }}>
+            <h3 style={{ fontFamily: T.fontSerif, fontSize: 22, color: th.textPrimary, margin: 0, letterSpacing: "-0.01em" }}>
               Add Placement Drive
             </h3>
           </div>
           <button
             onClick={onClose}
             style={{
-              position: "absolute", right: 20, top: 22,
+              position: "absolute", right: 22, top: 24,
               background: th.surfaceUp, border: `1px solid ${th.border}`,
-              borderRadius: "50%", width: 28, height: 28,
+              borderRadius: "50%", width: 30, height: 30,
               display: "flex", alignItems: "center", justifyContent: "center",
-              color: th.textSecondary, cursor: "pointer", transition: "all 0.15s"
+              color: th.textSecondary, cursor: "pointer", transition: "all 0.2s"
             }}
-            onMouseEnter={e => e.currentTarget.style.color = th.textPrimary}
-            onMouseLeave={e => e.currentTarget.style.color = th.textSecondary}
+            onMouseEnter={e => { e.currentTarget.style.color = th.textPrimary; e.currentTarget.style.transform = "rotate(90deg)"; }}
+            onMouseLeave={e => { e.currentTarget.style.color = th.textSecondary; e.currentTarget.style.transform = "rotate(0deg)"; }}
           >
             <X size={15} />
           </button>
@@ -326,15 +345,15 @@ function AddDriveModal({ companies, dark, onClose, onAdded }) {
 
         {error && (
           <div style={{
-            padding: "10px 14px", borderRadius: 10,
+            padding: "11px 15px", borderRadius: 10,
             background: T.dangerDim, border: `1px solid ${T.dangerBorder}`,
-            color: T.danger, fontSize: 13, marginBottom: 20, fontWeight: 500
+            color: T.danger, fontSize: 13, marginBottom: 22, fontWeight: 500
           }}>
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           
           <div>
             <label style={labelStyle}>Drive ID</label>
@@ -343,8 +362,8 @@ function AddDriveModal({ companies, dark, onClose, onAdded }) {
               value={form.drive_id}
               onChange={e => setForm({ ...form, drive_id: e.target.value })}
               style={inputStyle}
-              onFocus={e => { e.target.style.borderColor = T.amber; e.target.style.boxShadow = `0 0 0 3px ${T.amberRing}`; }}
-              onBlur={e => { e.target.style.borderColor = th.borderUp; e.target.style.boxShadow = "none"; }}
+              onFocus={e => { e.target.style.borderColor = T.amber; e.target.style.boxShadow = `0 0 0 4px ${T.amberRing}`; }}
+              onBlur={e => { e.target.style.borderColor = dark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.12)"; e.target.style.boxShadow = "none"; }}
             />
           </div>
 
@@ -354,11 +373,11 @@ function AddDriveModal({ companies, dark, onClose, onAdded }) {
               value={form.company_id}
               onChange={e => setForm({ ...form, company_id: e.target.value })}
               style={{ ...inputStyle, cursor: "pointer" }}
-              onFocus={e => { e.target.style.borderColor = T.amber; e.target.style.boxShadow = `0 0 0 3px ${T.amberRing}`; }}
-              onBlur={e => { e.target.style.borderColor = th.borderUp; e.target.style.boxShadow = "none"; }}
+              onFocus={e => { e.target.style.borderColor = T.amber; e.target.style.boxShadow = `0 0 0 4px ${T.amberRing}`; }}
+              onBlur={e => { e.target.style.borderColor = dark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.12)"; e.target.style.boxShadow = "none"; }}
             >
               {companies.map(c => (
-                <option key={c.company_id} value={c.company_id} style={{ background: th.surface }}>
+                <option key={c.company_id} value={c.company_id} style={{ background: dark ? "#1C1917" : "#FFFFFF", color: th.textPrimary }}>
                   {c.company_name} ({c.role} — ₹{c.package}L)
                 </option>
               ))}
@@ -372,8 +391,8 @@ function AddDriveModal({ companies, dark, onClose, onAdded }) {
               value={form.drive_date}
               onChange={e => setForm({ ...form, drive_date: e.target.value })}
               style={{ ...inputStyle, cursor: "text" }}
-              onFocus={e => { e.target.style.borderColor = T.amber; e.target.style.boxShadow = `0 0 0 3px ${T.amberRing}`; }}
-              onBlur={e => { e.target.style.borderColor = th.borderUp; e.target.style.boxShadow = "none"; }}
+              onFocus={e => { e.target.style.borderColor = T.amber; e.target.style.boxShadow = `0 0 0 4px ${T.amberRing}`; }}
+              onBlur={e => { e.target.style.borderColor = dark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.12)"; e.target.style.boxShadow = "none"; }}
             />
           </div>
 
@@ -383,12 +402,12 @@ function AddDriveModal({ companies, dark, onClose, onAdded }) {
               value={form.drive_type}
               onChange={e => setForm({ ...form, drive_type: e.target.value })}
               style={{ ...inputStyle, cursor: "pointer" }}
-              onFocus={e => { e.target.style.borderColor = T.amber; e.target.style.boxShadow = `0 0 0 3px ${T.amberRing}`; }}
-              onBlur={e => { e.target.style.borderColor = th.borderUp; e.target.style.boxShadow = "none"; }}
+              onFocus={e => { e.target.style.borderColor = T.amber; e.target.style.boxShadow = `0 0 0 4px ${T.amberRing}`; }}
+              onBlur={e => { e.target.style.borderColor = dark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.12)"; e.target.style.boxShadow = "none"; }}
             >
-              <option value="On-Campus" style={{ background: th.surface }}>On-Campus</option>
-              <option value="Off-Campus" style={{ background: th.surface }}>Off-Campus</option>
-              <option value="Pool Campus" style={{ background: th.surface }}>Pool Campus</option>
+              <option value="On-Campus" style={{ background: dark ? "#1C1917" : "#FFFFFF", color: th.textPrimary }}>On-Campus</option>
+              <option value="Off-Campus" style={{ background: dark ? "#1C1917" : "#FFFFFF", color: th.textPrimary }}>Off-Campus</option>
+              <option value="Pool Campus" style={{ background: dark ? "#1C1917" : "#FFFFFF", color: th.textPrimary }}>Pool Campus</option>
             </select>
           </div>
 
@@ -396,21 +415,34 @@ function AddDriveModal({ companies, dark, onClose, onAdded }) {
             type="submit"
             disabled={createMutation.isPending}
             style={{
-              marginTop: 6, padding: "12px",
-              background: createMutation.isPending ? th.surfaceUp : T.amber,
+              marginTop: 8, padding: "14px",
+              background: createMutation.isPending 
+                ? th.surfaceUp 
+                : `linear-gradient(135deg, ${T.amber} 0%, ${T.amberHover} 100%)`,
               color: createMutation.isPending ? th.textMuted : "#1C1917",
-              border: "none", borderRadius: 10, fontSize: 14.5, fontWeight: 600,
+              border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700,
               cursor: createMutation.isPending ? "not-allowed" : "pointer",
               fontFamily: T.font, display: "flex", justifyContent: "center", alignItems: "center", gap: 8,
-              transition: "all 0.2s ease"
+              transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
+              boxShadow: createMutation.isPending ? "none" : `0 4px 15px ${T.amberDim}`
             }}
-            onMouseEnter={e => { if(!createMutation.isPending) e.currentTarget.style.background = "#D97706"; }}
-            onMouseLeave={e => { if(!createMutation.isPending) e.currentTarget.style.background = T.amber; }}
+            onMouseEnter={e => { 
+              if(!createMutation.isPending) {
+                e.currentTarget.style.transform = "translateY(-1.5px)";
+                e.currentTarget.style.boxShadow = `0 6px 20px rgba(245, 158, 11, 0.25)`;
+              } 
+            }}
+            onMouseLeave={e => { 
+              if(!createMutation.isPending) {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = `0 4px 15px ${T.amberDim}`;
+              } 
+            }}
           >
             {createMutation.isPending ? (
               <><Loader2 size={16} className="animate-spin" /> Adding Drive…</>
             ) : (
-              <><Plus size={16} /> Add Drive</>
+              <><Plus size={16} /> Add Placement Drive</>
             )}
           </button>
         </form>
